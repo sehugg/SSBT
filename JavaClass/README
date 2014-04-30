@@ -1,0 +1,204 @@
+What is JavaClass?
+------------------
+
+Put into  one sentence, JavaClass is  a general purpose tool for "Byte
+Code Engineering".
+
+This API is  intended to give users a  convenient possibility to read,
+create,  and  manipulate  (binary)   Java  class  files  (ending  with
+.class). Classes  are represented  by JavaClass objects  which contain
+all the symbolic  information of the given class:  methods and fields,
+in particular.
+
+Such objects can be read from  an existing file, be transformed by the
+application and  dumped to a file  again (some class  loaders do this,
+e.g.). The JavaClass  library may be also useful if  you want to learn
+about the  Java Virtual  Machine (JVM) and  the format of  Java .class
+files. It was mainly designed to be used in other projects in order to
+handle the creation of Java class files with more comfort.
+
+For example,  you could manipulate a  class file, e.g.  for writing an
+obsfuscator. (An ``obsfuscator''  mangles the information contained in
+a class  file to  a human-unreadable format.  This is useful  when you
+want to keep someone from decompiling your classes).
+
+Vice versa,  if you are  writing a compiler  that has to  produce Java
+byte code, you can  construct JavaClass objects conveniently with this
+package and then dump them to a file. See paragraph ClassGen below for
+details.
+
+Documentation
+-------------
+
+Technical  report:  "Byte Code  Engineering  with  the JavaClass  API"
+available at
+
+	ftp://ftp.inf.fu-berlin.de/pub/JavaClass/report.ps.gz
+
+Conference paper:  "Byte Code  Engineering" available at
+
+	ftp://ftp.inf.fu-berlin.de/pub/JavaClass/paper.ps.gz
+
+View the API documentation in the docs/ directory with your favorite
+WWW browser, e.g.:
+
+	% netscape <JavaClass>/docs/packages.html
+
+
+As  a   first  demonstration,  listclass.java  is   included  in  this
+distribution,  which   displays  the  contents  of   the  given  class
+files. You can use the  switches "-code" to show the disassembled code
+and "-constants" to print the whole constant pool. (Which may be quite
+long!)
+
+Requirements
+------------
+
+JavaClass  is   written  entirely in   Java,  so  it should be  fairly
+straightforward to get it set up and running in your environment. Just
+set your  CLASSPATH variable to  the appropiate   value, i.e. on  UNIX
+system using the (t)csh
+
+	% setenv CLASSPATH ${CLASSPATH}:<JavaClass>
+
+where <JavaClass> is the path to the unpacked directory.
+
+I have tested JavaClass with the JDK 1.2 on Solaris and Linux and with
+VisualAge under Windows95.
+
+Trying it out
+-------------
+
+After setting the CLASSPATH try to use the list utility:
+
+	% java listclass -code -constants listclass.class | more
+
+or like this:
+
+	% java listclass java.lang.StringBuffer
+
+Then take a look  at the source code in  listclass.java. You may  also
+want to try patchclass.java  which  patches string constants in  class
+files.  For example:
+
+	% java listclass -constants patchclass.class
+	% java patchclass string foobar patchclass.class
+	% java listclass -constants _patchclass.class
+
+You'll note the subtle difference...
+
+JavaClass objects can be  traversed with Visitor patterns as described
+in the  famous "Design Patterns" book. The  JasminVisitor class, e.g.,
+makes  use of  it in  order  to convert  class files  into the  Jasmin
+assembler format. Try
+
+	% java JasminVisitor listclass 
+	% more listclass.j
+
+ClassGen
+--------
+
+The    ClassGen API helps    compiler  writers to  produce byte  code,
+i.e. Java class  files.  Others may want   to load classes  and modify
+them.   Take a look   at the Mini   language I wrote for demonstration
+purposes:
+
+	http://www.inf.fu-berlin.de/~dahm/JavaClass/#ClassGen
+
+There  is an example  program named  "helloify.java" included  in this
+distribution that takes class files and modifies all of their methods,
+so that they will "Hello" and their name and signature before anything
+else. Modifying the program itself gives us funny results:
+
+	% java helloify helloify.class
+
+This yields  a class file  named "helloify_hello.class", which  we can
+use to modify itself again:
+
+	% java helloify_hello helloify_hello.class
+	Hello from public static void main(String[])
+	Hello from private static final void helloifyClassName(de.fub.bytecode.classfile.JavaClass)
+	Hello from private static final de.fub.bytecode.classfile.Method 
+	helloifyMethod(de.fub.bytecode.classfile.Method)
+	...
+
+yields "helloify_hello_hello.class" and so  on. Every time the printed
+message will be repeated once more.
+
+Other examples
+--------------
+
+Other  code examples  of  the API  are "HelloWorldBuilder.java"  which
+creates  a "HelloWorld"  class and  "Peephole.java" which  remove NOPs
+from all methods of a class.
+
+Class2HTML
+----------
+
+The  Class2HTML tool  converts class  files  into HTML  files. For example, try
+
+	% java de.fub.bytecode.util.Class2HTML -d classdocs \
+	  de/fub/bytecode/util/*.class and
+	% java de.fub.bytecode.util.Class2HTML -d classdocs -zip \
+	  $JAVA_HOME/lib/classes.zip java/lang/Object.class
+
+Then you can view the generated documentation with
+
+	% netscape classdocs/de.fub.bytecode.util.Class2HTML.html
+
+
+Rebuilding JavaClass
+--------------------
+
+The classes of this package  should be precompiled.  You can recompile
+the package simply by typing
+
+	% cd <JavaClass>
+	% make allclean
+	% make JC=javac JFLAGS=
+	% mkdir docs
+	% make docs
+
+where <JavaClass> is the path to the unpacked directory. You will have
+to use GNU make. Typing
+
+	% cd <JavaClass>/de/fub/bytecode
+	% javac */*.java *.java
+
+might work, too.
+
+Further readings
+----------------
+
+You can find detailed information about the JVM at SUN's FTP server
+
+	ftp://java.sun.com/docs/specs/
+
+Ther are also some good books available
+	
+	"Java Virtual Machine", by Meyer and Downing
+	"The Java Virtual Machine Specification", by Lindholm and Yellin,
+	also available online at
+
+	http://www.javasoft.com/docs/books/vmspec/index.html
+
+Copyright
+---------
+
+The JavaClass framework is Copyright (1999) Markus Dahm, under the
+terms of the GNU Library General Public License. See COPYING.html for
+more.
+
+
+New versions
+------------
+
+	http://www.inf.fu-berlin.de/~dahm/JavaClass/index.html
+
+
+Author
+------
+
+Send  bug  reports and  suggestions  to dahm@inf.fu-berlin.de  (Markus
+Dahm), please tell  me also if you find this tool  helpful and in what
+kind of projects you use it.

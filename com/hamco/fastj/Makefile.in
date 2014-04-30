@@ -1,0 +1,21 @@
+
+CC=gcc295
+CXX=g++295
+
+# put your own root directory here
+
+FASTJ_HOME=/usr/home/hugg/fastj
+FASTJ_SRCHOME=${FASTJ_HOME}/com/hamco/fastj
+
+CFLAGS= -g -I${FASTJ_SRCHOME}/native/include -I${FASTJ_SRCHOME}/include -I/usr/local/include/glib12
+#CFLAGS+= -O2
+CFLAGS+= ${XCFLAGS}
+
+LIBS=-L/usr/local/lib -lglib12 -lz
+
+depends: .PHONY .NOTMAIN
+	echo "OBJS = \\" >.targets
+	ls -1 *.cpp *.c | sed -e 's/.c[p]*$$/.o \\/' >>.targets
+	gcc -M ${CFLAGS} *.cpp >.depend
+	-gcc -M ${CFLAGS} *.c >>.depend
+

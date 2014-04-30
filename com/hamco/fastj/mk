@@ -1,0 +1,2 @@
+#!/bin/sh
+java -mx96M com.hamco.fastj.Make $*

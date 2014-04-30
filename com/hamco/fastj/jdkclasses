@@ -1,0 +1,2 @@
+#!/bin/sh
+unzip -l /usr/local/jdk1.2.2/jre/lib/rt.jar | cut -c 29- | grep .class | sed -e 's/.class//g' | sed -e 's/\//./g'

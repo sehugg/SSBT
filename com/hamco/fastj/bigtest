@@ -1,0 +1,2 @@
+#!/bin/csh
+rm test.out && java com.hamco.fastj.Main `./jdkclasses | head -500` > & test.out

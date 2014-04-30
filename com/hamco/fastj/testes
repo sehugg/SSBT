@@ -1,0 +1,5 @@
+#!/bin/sh
+
+CLASSES="java.util.Vector java.util.Hashtable java.util.Properties java.util.GregorianCalendar java.util.BitSet java.util.HashMap java.text.SimpleDateFormat java.text.MessageFormat java.math.BigDecimal java.util.HashMap"
+
+java com.hamco.fastj.Main ${CLASSES}
